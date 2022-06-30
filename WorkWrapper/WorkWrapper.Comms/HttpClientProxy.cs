@@ -23,36 +23,3 @@ public class HttpClientProxy : IHttpClientProxy
         return await httpClient.SendAsync(httpRequestMessage);
     }
 }
-
-public class HttpClientFactory : IHttpClientFactory
-{
-    public HttpClientFactory()
-    {
-
-    }
-
-    public IHttpClientProxy Create(string uri)
-    {
-        return new HttpClientProxy(uri);
-    }
-}
-
-public interface IHttpClientFactory
-{
-    IHttpClientProxy Create(string uri);
-}
-
-public interface IWorkApiClientFactory
-{
-    IWorkApiClient Create(ISession session);
-}
-
-public class WorkApiClientFactory : IWorkApiClientFactory
-{
-    public IWorkApiClient Create(ISession session)
-    {
-        var proxy = new HttpClientProxy(session.Uri);
-
-        return new WorkApiClient(session, proxy);
-    }
-}

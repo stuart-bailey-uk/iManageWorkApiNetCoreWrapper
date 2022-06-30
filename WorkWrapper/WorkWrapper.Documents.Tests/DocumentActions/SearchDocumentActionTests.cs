@@ -47,6 +47,20 @@ namespace WorkWrapper.Documents.Tests.DocumentActions
                     s == "documents?custom1=foo&class=doc")));
         }
 
+        [Fact]
+        public async Task SearchDocument_NoCriteria_ReturnsArgException()
+        {
+            //assign
+            var searchCriteria = new StandardDocumentSearchProfile();
+
+            var mWorkApiClient = new Mock<IWorkApiClient>();
+
+            //act
+            var action = new DocumentsSearchAction(mWorkApiClient.Object);
+            
+            //assert
+            await Assert.ThrowsAsync<ArgumentException>(() => action.SearchDocumentsAsync(searchCriteria));
+        }
 
     }
 }

@@ -1,7 +1,9 @@
-﻿using WorkWrapper.Core.Auth;
+﻿using System.Diagnostics.CodeAnalysis;
+using WorkWrapper.Core.Auth;
 
 namespace WorkWrapper.Authentication;
 
+[ExcludeFromCodeCoverage]
 internal class SessionToken : ISessionToken
 {
     public string AccessToken { get; set; } = string.Empty;

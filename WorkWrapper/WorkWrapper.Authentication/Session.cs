@@ -1,8 +1,10 @@
-﻿using WorkWrapper.Core.Auth;
+﻿using System.Diagnostics.CodeAnalysis;
+using WorkWrapper.Core.Auth;
 using WorkWrapper.Session;
 
 namespace WorkWrapper.Authentication;
 
+[ExcludeFromCodeCoverage]
 internal class Session : ISession
 {
     private readonly DateTime _sessionCreated;
