@@ -2,7 +2,7 @@
 
 public interface IBaseEntity
 {
-    string Id { get; set; }
+    string? Id { get; set; }
 
     string? Database { get; set; }
 }

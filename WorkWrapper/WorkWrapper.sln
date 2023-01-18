@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkWrapper.Authentication"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkWrapper.Authentication.Tests", "WorkWrapper.Authentication.Tests\WorkWrapper.Authentication.Tests.csproj", "{40CC0B18-468D-4E3C-96FF-3FF63502AB35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "Test\TestConsole\TestConsole.csproj", "{7807A3D1-E772-4A5E-890F-2C1AFA77B46D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsole", "Test\TestConsole\TestConsole.csproj", "{7807A3D1-E772-4A5E-890F-2C1AFA77B46D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkWrapper.Functions", "WorkWrapper.Functions\WorkWrapper.Functions.csproj", "{92DFB741-2CAB-46FB-9744-239B34E12537}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,10 @@ Global
 		{7807A3D1-E772-4A5E-890F-2C1AFA77B46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7807A3D1-E772-4A5E-890F-2C1AFA77B46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7807A3D1-E772-4A5E-890F-2C1AFA77B46D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92DFB741-2CAB-46FB-9744-239B34E12537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92DFB741-2CAB-46FB-9744-239B34E12537}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92DFB741-2CAB-46FB-9744-239B34E12537}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92DFB741-2CAB-46FB-9744-239B34E12537}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

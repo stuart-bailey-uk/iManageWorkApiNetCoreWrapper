@@ -1,32 +1,26 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using WorkWrapper.Comms.ErrorResponses;
 
 namespace WorkWrapper.Comms;
 
 [ExcludeFromCodeCoverage]
 public class WorkApiException : Exception
 {
-    public WorkApiException(Uri? requestMessageRequestUri) : base($"Error calling {requestMessageRequestUri}")
-    {
+    private readonly string _data;
 
+    public IErrorResponse? ErrorResponse { get; }
+
+    public bool HasDetails => ErrorResponse != null;
+
+    public WorkApiException(IErrorResponse errorResponse, string textResponse) : base(errorResponse.GetType().Name)
+    {
+        ErrorResponse = errorResponse;
     }
 
-    public WorkApiException(string message) : base(message)
+    public WorkApiException(string message, string data) : base(message)
     {
-
-    }
-}
-
-public class WorkApiObjectException : Exception
-{
-    public dynamic Response { get; }
-
-    public WorkApiObjectException(Uri? requestMessageRequestUri, string response) : base($"Error calling {requestMessageRequestUri}")
-    {
-        Response = response;
+        _data = data;
     }
 
-    public WorkApiObjectException(string message, string response) : base(message)
-    {
-        Response = response;
-    }
+    public string TextData => _data;
 }

@@ -1,6 +1,6 @@
-﻿using System.Net;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using WorkWrapper.Comms;
+using WorkWrapper.Comms.ErrorResponses;
 using WorkWrapper.Core.Auth;
 using WorkWrapper.Core.Json;
 
@@ -62,9 +62,7 @@ public class VirtualLogon : SessionBuilder
         var responseContent = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
-        {
-            throw new WorkApiObjectException(response.StatusCode.ToString(), responseContent);
-        }
+            throw await ErrorResponseFactory.Create(response);
 
         SessionToken? sessionObject;
         try
@@ -83,7 +81,7 @@ public class VirtualLogon : SessionBuilder
         }
 
         if (sessionObject == null)
-            throw new WorkApiObjectException(response.RequestMessage?.RequestUri, responseContent);
+            throw new Exception($"Unable to deserialize response to {nameof(SessionToken)}");
 
         return sessionObject;
     }

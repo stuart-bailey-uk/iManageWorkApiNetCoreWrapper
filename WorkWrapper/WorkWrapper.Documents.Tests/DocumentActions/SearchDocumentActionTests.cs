@@ -1,6 +1,5 @@
 ﻿using Moq;
 using WorkWrapper.Comms;
-using WorkWrapper.Core.Models;
 using WorkWrapper.Documents.Actions;
 using WorkWrapper.Documents.Models;
 using Xunit;

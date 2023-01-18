@@ -12,5 +12,7 @@ public interface IWorkApiClient
 
     Task<HttpResponseMessage> SendAsync(HttpRequestMessage httpRequestMessage);
 
-    Task<T> SendAsync<T>(HttpRequestMessage httpRequestMessage);
+    //Task<T> SendAsync<T>(HttpRequestMessage httpRequestMessage);
+
+    Task<T> SendAsync<T>(HttpMethod httpMethod, string uri, HttpContent? httpContent);
 }
