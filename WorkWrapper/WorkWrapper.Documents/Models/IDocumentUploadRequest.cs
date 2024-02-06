@@ -1,4 +1,6 @@
-﻿namespace WorkWrapper.Documents.Models;
+﻿using WorkWrapper.Core.Models;
+
+namespace WorkWrapper.Documents.Models;
 
 public interface IDocumentUploadRequest
 {

@@ -1,8 +1,12 @@
-﻿namespace WorkWrapper.Comms;
+﻿using Newtonsoft.Json;
+
+namespace WorkWrapper.Comms;
 
 public interface IWorkApiClient
 {
     Task<T> GetAsync<T>(string uri);
+
+    Task<T?> GetAsync<T>(string uri, JsonSerializerSettings customSerializerSettings);
 
     Task<Stream?> GetStreamAsync(string uri);
 

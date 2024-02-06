@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Net.Http;
 using WorkWrapper.Comms.ErrorResponses;
 using WorkWrapper.Session;
 
@@ -9,7 +10,6 @@ public class WorkApiClient : IWorkApiClient
     private readonly ISession _session;
     private readonly IHttpClientProxy _httpClientProxy;
     private string? _library = string.Empty;
-    private List<JsonConverter>? _converters;
 
     public WorkApiClient(ISession session, IHttpClientProxy httpClientProxy)
     {
@@ -22,6 +22,18 @@ public class WorkApiClient : IWorkApiClient
         var message = BuildMessage<T>(uri);
 
         return await SendAsync<T>(message);
+    }
+
+    /// <inheritdoc />
+    public async Task<T?> GetAsync<T>(string uri, JsonSerializerSettings customSerializerSettings)
+    {
+        var message = BuildMessage<T>(uri);
+
+        var response = await SendRequestAsync<T>(message);
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        return JsonConvert.DeserializeObject<T>(content, customSerializerSettings);
     }
 
     public async Task<Stream?> GetStreamAsync(string uri)
@@ -81,12 +93,7 @@ public class WorkApiClient : IWorkApiClient
     {
         var uri = httpRequestMessage.RequestUri;
 
-        var response = await SendAsync(httpRequestMessage);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw await ErrorResponseFactory.Create(response);
-        }
+        var response = await SendRequestAsync<T>(httpRequestMessage);
 
         var content = await response.Content.ReadAsStringAsync();
 
@@ -96,6 +103,18 @@ public class WorkApiClient : IWorkApiClient
             throw new Exception($"Unable to deserialize response to {typeof(T).Name}");
 
         return responseObject;
+    }
+
+    private async Task<HttpResponseMessage> SendRequestAsync<T>(HttpRequestMessage httpRequestMessage)
+    {
+        var response = await SendAsync(httpRequestMessage);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await ErrorResponseFactory.Create(response);
+        }
+
+        return response;
     }
 
     public IWorkApiClient ForPreferredLibrary()
@@ -108,15 +127,6 @@ public class WorkApiClient : IWorkApiClient
     public IWorkApiClient ForLibrary(string? library)
     {
         _library = library;
-
-        return this;
-    }
-
-    public IWorkApiClient AttachConverters(JsonConverter jsonConverter)
-    {
-        _converters ??= new();
-
-        _converters.Add(jsonConverter);
 
         return this;
     }

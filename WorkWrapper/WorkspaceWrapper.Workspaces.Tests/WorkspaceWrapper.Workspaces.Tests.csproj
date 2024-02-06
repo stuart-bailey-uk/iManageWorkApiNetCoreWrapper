@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WorkWrapper.Comms\WorkWrapper.Comms.csproj" />
-    <ProjectReference Include="..\WorkWrapper.Documents\WorkWrapper.Documents.csproj" />
+    <ProjectReference Include="..\WorkWrapper.Workspaces\WorkWrapper.Workspaces.csproj" />
   </ItemGroup>
 
 </Project>

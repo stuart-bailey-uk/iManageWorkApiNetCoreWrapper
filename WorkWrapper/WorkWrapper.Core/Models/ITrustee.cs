@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using WorkWrapper.Core.Models;
 
-namespace WorkWrapper.Documents.Models;
+namespace WorkWrapper.Core.Models;
 
 public interface ITrustee
 {
