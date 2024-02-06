@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WorkWrapper.Comms;
-using WorkWrapper.Core.Models;
+﻿using WorkWrapper.Comms;
 using WorkWrapper.Documents.Models;
 
 namespace WorkWrapper.Documents.Actions

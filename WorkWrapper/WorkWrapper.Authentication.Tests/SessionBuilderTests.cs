@@ -1,6 +1,4 @@
-﻿using System.Net;
-using Moq;
-using Newtonsoft.Json;
+﻿using Moq;
 using WorkWrapper.Comms;
 using WorkWrapper.Core.Auth;
 using WorkWrapper.Session;
@@ -18,10 +16,10 @@ public class SessionBuilderTests
 
         //act
         var sessionBuilder = new SessionBuilderTestWrapper(mWorkClientFactory.Object);
-        sessionBuilder.SetupResponse(() => throw new WorkApiObjectException("Dummy", "Dummy"));
+        sessionBuilder.SetupResponse(() => throw new WorkApiException("Dummy", "Dummy"));
 
         //assert
-        await Assert.ThrowsAsync<WorkApiObjectException>(() => sessionBuilder.GetSessionAsync());
+        await Assert.ThrowsAsync<WorkApiException>(() => sessionBuilder.GetSessionAsync());
     }
 
     [Fact]

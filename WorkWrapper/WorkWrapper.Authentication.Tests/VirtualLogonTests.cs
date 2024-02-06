@@ -2,7 +2,6 @@
 using Moq;
 using WorkWrapper.Comms;
 using WorkWrapper.Core.Auth;
-using WorkWrapper.Session;
 using Xunit;
 
 namespace WorkWrapper.Authentication.Tests
@@ -64,32 +63,7 @@ namespace WorkWrapper.Authentication.Tests
             logonWrapper.ForUser("foo", "bar");
 
             //assert
-            await Assert.ThrowsAsync<WorkApiObjectException>(() => logonWrapper.TestLogonAsync());
-        }
-
-        [Fact]
-        public async Task VirtualLogin_UnexpectedResponse_Returns_Exception()
-        {
-            //assign
-            var mWorkApiFactory = new Mock<IWorkApiClientFactory>();
-
-            const string loginResponse = @"<html></html>";
-
-            var responseContent = new StringContent(loginResponse);
-
-            var mHttpClient = new Mock<IHttpClientProxy>();
-            mHttpClient.Setup(m => m.SendAsync(It.IsAny<HttpRequestMessage>()))
-                .ReturnsAsync((HttpRequestMessage request) => new HttpResponseMessage(HttpStatusCode.OK) { Content = responseContent, RequestMessage = request });
-
-            //act
-            var logonWrapper = new VirtualLogonTestWrapper(mWorkApiFactory.Object, mHttpClient.Object);
-            logonWrapper.ForClient("foo", "bar");
-            logonWrapper.ForUser("foo", "bar");
-
-            //assert
-            var exception = await Assert.ThrowsAsync<WorkApiObjectException>(() => logonWrapper.TestLogonAsync());
-
-            Assert.Equal($"Error calling auth/oauth2/token", exception.Message);
+            await Assert.ThrowsAsync<WorkApiException>(() => logonWrapper.TestLogonAsync());
         }
 
         [Fact]

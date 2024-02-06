@@ -1,9 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using Newtonsoft.Json;
-using WorkWrapper.Core.Json;
-using WorkWrapper.Documents.Actions;
-
-namespace WorkWrapper.Documents.Models;
+﻿namespace WorkWrapper.Documents.Models;
 
 public abstract class DocumentSearchProfile : IDocumentSearchProfile
 {

@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
-using WorkWrapper.Core.Json;
+using System.Net.Http;
+using WorkWrapper.Comms.ErrorResponses;
 using WorkWrapper.Session;
 
 namespace WorkWrapper.Comms;
@@ -11,7 +10,6 @@ public class WorkApiClient : IWorkApiClient
     private readonly ISession _session;
     private readonly IHttpClientProxy _httpClientProxy;
     private string? _library = string.Empty;
-    private List<JsonConverter>? _converters;
 
     public WorkApiClient(ISession session, IHttpClientProxy httpClientProxy)
     {
@@ -26,18 +24,36 @@ public class WorkApiClient : IWorkApiClient
         return await SendAsync<T>(message);
     }
 
+    /// <inheritdoc />
+    public async Task<T?> GetAsync<T>(string uri, JsonSerializerSettings customSerializerSettings)
+    {
+        var message = BuildMessage<T>(uri);
+
+        var response = await SendRequestAsync<T>(message);
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        return JsonConvert.DeserializeObject<T>(content, customSerializerSettings);
+    }
+
     public async Task<Stream?> GetStreamAsync(string uri)
     {
         var message = BuildMessage<Stream>(uri);
 
         var response = await SendAsync(message);
 
-        if (!response.IsSuccessStatusCode) throw new WorkApiException(uri);
+        if (!response.IsSuccessStatusCode)
+            throw await ErrorResponseFactory.Create(response);
 
         return await response.Content.ReadAsStreamAsync();
     }
 
     private HttpRequestMessage BuildMessage<T>(string uri)
+    {
+        return BuildMessage<T>(HttpMethod.Get, uri);
+    }
+
+    private HttpRequestMessage BuildMessage<T>(HttpMethod httpMethod, string uri)
     {
         if (uri.StartsWith("/"))
         {
@@ -51,7 +67,7 @@ public class WorkApiClient : IWorkApiClient
 
         uri = $"/api/v2/customers/{_session.CustomerId}/{uri}";
 
-        var message = new HttpRequestMessage(HttpMethod.Get, uri);
+        var message = new HttpRequestMessage(httpMethod, uri);
         return message;
     }
 
@@ -63,34 +79,42 @@ public class WorkApiClient : IWorkApiClient
         return await _httpClientProxy.SendAsync(httpRequestMessage);
     }
 
-    public async Task<T> SendAsync<T>(HttpRequestMessage httpRequestMessage)
+    public Task<T> SendAsync<T>(HttpMethod httpMethod, string uri, HttpContent? httpContent = null)
+    {
+        var message = BuildMessage<T>(httpMethod, uri);
+
+        if(httpContent != null)
+            message.Content = httpContent;
+
+        return SendAsync<T>(message);
+    }
+
+    private async Task<T> SendAsync<T>(HttpRequestMessage httpRequestMessage)
     {
         var uri = httpRequestMessage.RequestUri;
 
-        var response = await SendAsync(httpRequestMessage);
-
-        if (!response.IsSuccessStatusCode) throw new WorkApiException(uri);
+        var response = await SendRequestAsync<T>(httpRequestMessage);
 
         var content = await response.Content.ReadAsStringAsync();
 
-        var converters = new List<JsonConverter>(_converters ?? Enumerable.Empty<JsonConverter>())
-        {
-            new StringEnumConverter{ NamingStrategy = new CamelCaseNamingStrategy() },
-        };
-
-        var settings = new JsonSerializerSettings
-        {
-            ContractResolver = new WorkJsonContractResolver(),
-            Converters = converters,
-            NullValueHandling = NullValueHandling.Ignore
-        };
-
-        var responseObject = JsonConvert.DeserializeObject<T>(content, settings);
+        var responseObject = WorkSerializer.DeserializeObject<T>(content);
 
         if (responseObject == null)
-            throw new WorkApiObjectException($"Unable to deserialize response to {typeof(T).Name}", content);
+            throw new Exception($"Unable to deserialize response to {typeof(T).Name}");
 
         return responseObject;
+    }
+
+    private async Task<HttpResponseMessage> SendRequestAsync<T>(HttpRequestMessage httpRequestMessage)
+    {
+        var response = await SendAsync(httpRequestMessage);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await ErrorResponseFactory.Create(response);
+        }
+
+        return response;
     }
 
     public IWorkApiClient ForPreferredLibrary()
@@ -106,13 +130,5 @@ public class WorkApiClient : IWorkApiClient
 
         return this;
     }
-
-    public IWorkApiClient AttachConverters(JsonConverter jsonConverter)
-    {
-        _converters ??= new();
-
-        _converters.Add(jsonConverter);
-
-        return this;
-    }
 }
+

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using WorkWrapper.Comms;
+using WorkWrapper.Comms.ErrorResponses;
 using WorkWrapper.Core.Auth;
 using WorkWrapper.Session;
 
@@ -33,7 +34,7 @@ public abstract class SessionBuilder
         var responseContent = JsonConvert.DeserializeObject<dynamic>(content);
 
         if (responseContent == null)
-            throw new WorkApiException("Response from discovery call invalid");
+            throw await ErrorResponseFactory.Create(response);
 
         session.CustomerId = responseContent.data.user.customer_id.ToString();
         session.PreferredLibrary = responseContent.data.work.preferred_library;

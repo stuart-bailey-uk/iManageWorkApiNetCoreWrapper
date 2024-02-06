@@ -1,28 +1,27 @@
-﻿using Newtonsoft.Json;
-using WorkWrapper.Core.Models;
-
-namespace WorkWrapper.Documents.Models;
+﻿namespace WorkWrapper.Documents.Models;
 
 public interface IDocumentProfile : IWorkProfile
 {
+    string? Author { get; set; }
+    string? Operator { get; set; }
     string? Comment { get; set; }
     string? ContentType { get; set; }
 
-    DateTime CreateDate { get; set; }
+    DateTime? CreateDate { get; set; }
 
     DateTime? DeclaredDate { get; set; }
 
-    int DocumentNumber { get; set; }
+    int? DocumentNumber { get; set; }
 
-    DateTime EditDate { get; set; }
+    DateTime? EditDate { get; set; }
 
     string? Extension { get; set; }
 
-    DateTime FileCreateDate { get; set; }
+    DateTime? FileCreateDate { get; set; }
 
-    DateTime FileEditDate { get; set; }
+    DateTime? FileEditDate { get; set; }
 
-    bool IsInUse { get; set; }
+    bool? IsInUse { get; set; }
     
     string? InUseBy { get; set; }
     
@@ -44,11 +43,12 @@ public interface IDocumentProfile : IWorkProfile
     
     string? LastUser { get; set; }
 
-    int RetainDays { get; set; }
+    int? RetainDays { get; set; }
     
     string? WorkspaceId { get; set; }
     
     string? WorkspaceName { get; set; }
 
-    LockType LockType { get; set; }
+    LockType? LockType { get; set; }
+    long? Size { get; set; }
 }

@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace WorkWrapper.Core.Auth;
+﻿namespace WorkWrapper.Core.Auth;
 
 public interface ISessionToken
 {
